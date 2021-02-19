@@ -37,15 +37,37 @@ function main() {
         return;
     }
 
-    // 将顶点位置传输给attribute变量
-    gl.vertexAttrib3f(a_Position, 0.0, 0.0, 0.0);
+    // 注册鼠标点击事件响应函数
+    canvas.onmousedown = (ev) => {
+        click(ev, gl, canvas, a_Position)
+    }
 
     // 设置<canvas>的背景色
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     // 清空<canvas>
     gl.clear(gl.COLOR_BUFFER_BIT)
+}
 
-    // 绘制一个点
-    gl.drawArrays(gl.POINTS, 0, 1)
+const g_points = []
+function click(ev, gl, canvas, a_Position) {
+    let x = ev.clientX; // 鼠标点击处的x坐标
+    let y = ev.clientY; // 鼠标点击处的y坐标
+    const rect = ev.target.getBoundingClientRect();
+
+    x = ((x - rect.left) - (canvas.height / 2)) / (canvas.height / 2);
+    y = (canvas.width / 2 - (y -rect.top)) / (canvas.width / 2);
+
+    // 将坐标存储到哦g_points数组中
+    g_points.push([x, y])
+
+    // 清空<canvas>
+    gl.clear(gl.COLOR_BUFFER_BIT)
+
+    g_points.forEach(item => {
+        // 将点的位置传递到变量a_Position
+        gl.vertexAttrib3f(a_Position, item[0], item[1], 0.0)
+        // 绘制一个点
+        gl.drawArrays(gl.POINTS, 0, 1)
+    })
 }
