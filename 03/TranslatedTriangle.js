@@ -1,8 +1,9 @@
 // 顶点着色器
 const VSHADER_SOURCE =
     'attribute vec4 a_Position;\n' +
+    'uniform vec4 u_Translation;\n' +
     'void main() {\n' +
-    '  gl_Position = a_Position;\n' +
+    '  gl_Position = a_Position + u_Translation;\n' +
     '}\n'
 
 // 片元着色器
@@ -10,6 +11,9 @@ const FSHADER_SOURCE =
     'void main() {\n' +
     ' gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' + // 设置颜色
     '}\n';
+
+// 在x，y，z方向上平移的距离
+const Tx = 0.5, Ty = 0.5, Tz = 0.0;
 
 function main() {
     // 获取<canvas>元素
@@ -35,19 +39,27 @@ function main() {
         return;
     }
 
-    // 设置<canvas>的背景色
+    // 将平移距离传输给定点着色器
+    const u_Translation = gl.getUniformLocation(gl.program, 'u_Translation');
+    if (!u_Translation) {
+        console.log('Failed to get the storage location of u_Translation');
+        return;
+    }
+    gl.uniform4f(u_Translation, Tx, Ty, Tz, 0.0);
+
+    // 设置背景色
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-    // 清空<canvas>
+    // 清空
     gl.clear(gl.COLOR_BUFFER_BIT)
 
-    // 绘制矩形
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, n)
+    // 绘制三角形
+    gl.drawArrays(gl.TRIANGLES, 0, n)
 }
 
 function initVertexBuffers(gl) {
-    const vertices = new Float32Array([-0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5])
-    const n = 4 // 点的个数
+    const vertices = new Float32Array([0.0, 0.5, -0.5, -0.5, 0.5, -0.5])
+    const n = 3 // 点的个数
 
     // 创建缓冲区对象
     const vertexBuffer = gl.createBuffer();
