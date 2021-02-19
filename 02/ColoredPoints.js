@@ -11,7 +11,7 @@ const FSHADER_SOURCE =
     'precision mediump float;\n' +
     'uniform vec4 u_FragColor;\n' +
     'void main() {\n' +
-    ' gl_FragColor = u_FragColor;\n' + // 设置颜色
+    ' gl_FragColor = u_FragColor;\n' +
     '}\n';
 
 function main() {
@@ -42,7 +42,7 @@ function main() {
     // 获取u_FragColor变量的存储位置
     const u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
 
-    if (u_FragColor < 0) {
+    if (!u_FragColor) {
         console.log('Failed to get the storage location of u_FragColor');
         return;
     }
@@ -70,12 +70,12 @@ function click(ev, gl, canvas, a_Position, u_FragColor) {
 
     // 点的颜色
     let color
-    if (x >= 0.0 && y >= 0.0) { // 第一象限
+    if (x >= 0.0 && y >= 0.0) {
         color = [1.0, 0.0, 0.0, 1.0]; // 红色
     } else if (x < 0.0 && y < 0.0) {
-        color = [0.0, 1.0, 0.0, 1.0];
+        color = [0.0, 1.0, 0.0, 1.0]; // 绿色
     } else {
-        color = [1.0, 1.0, 1.0, 1.0,];
+        color = [1.0, 1.0, 1.0, 1.0,]; // 白色
     }
 
     // 将点信息存储到哦g_points数组中
