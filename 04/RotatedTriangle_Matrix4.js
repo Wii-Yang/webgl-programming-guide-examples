@@ -39,18 +39,10 @@ function main() {
         return;
     }
 
-    // 创建旋转矩阵
-    const radian = Math.PI * ANGLE / 180.0; // 角度值转为弧度制
-    const cosB = Math.cos(radian);
-    const sinB = Math.sin(radian);
-
-    // 注意WebGL中矩阵是列主序的
-    const xformMatrix = new Float32Array([
-        cosB, sinB, 0.0, 0.0,
-        -sinB, cosB, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0
-    ]);
+    // 为旋转矩阵创建Matrix4对象
+    const xformMatrix = new Matrix4();
+    // 将xformMatrix设置为旋转矩阵
+    xformMatrix.setRotate(ANGLE, 0, 0, 1)
 
     // 将旋转矩阵传输给顶点着色器
     const u_xformMatrix = gl.getUniformLocation(gl.program, 'u_xformMatrix');
@@ -58,7 +50,7 @@ function main() {
         console.log('Failed to get the storage location of u_xformMatrix');
         return;
     }
-    gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);
+    gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix.elements);
 
     // 设置背景色
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
